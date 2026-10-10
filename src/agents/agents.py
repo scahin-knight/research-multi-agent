@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain.agents import create_agent
+from langgraph.prebuilt import create_react_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -11,7 +11,7 @@ load_dotenv()
 
 # Model initialization using Google Gemini API
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3.1-flash-lite",  # or "gemini-1.5-pro"
+    model="gemini-3.5-flash-lite",  # or "gemini-1.5-pro"
     temperature=0,
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
@@ -20,20 +20,20 @@ llm = ChatGoogleGenerativeAI(
 # 1. Search Agent
 # ---------------------------------------------------------------------
 def build_search_agent():
-    return create_agent(
+    return create_react_agent(
         model=llm,
         tools=[web_search],
-        system_prompt="You are a research search agent. Find recent, reliable, and detailed sources on the topic."
+        prompt="You are a research search agent. Find recent, reliable, and detailed sources on the topic."
     )
 
 # ---------------------------------------------------------------------
 # 2. Reader / Scraper Agent
 # ---------------------------------------------------------------------
 def build_reader_agent():
-    return create_agent(
+    return create_react_agent(
         model=llm,
         tools=[scrape_url],
-        system_prompt="You are a web reading agent. Extract and summarize key content from relevant URLs."
+        prompt="You are a web reading agent. Extract and summarize key content from relevant URLs."
     )
 
 # ---------------------------------------------------------------------
